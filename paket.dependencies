@@ -1,0 +1,8 @@
+source https://www.myget.org/F/akkadotnet/api/v2
+source https://api.nuget.org/v3/index.json
+source https://nuget.org/api/v2
+
+nuget Akka.FSharp prerelease
+nuget Akka.Remote prerelease
+nuget NUnit
+nuget Wire
