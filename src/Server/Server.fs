@@ -2,6 +2,7 @@
 
 open Akka.FSharp
 open Messages
+open System
 
 let config = """
     akka {
@@ -17,12 +18,27 @@ let config = """
       }
     }
     """
+let (<!!) (actor : Actor<_>) msg = actor.Sender() <! ResponseMessage msg
+
+let turtleHandler (actor : Actor<_>) msg = 
+  match extractRequest msg with
+  | Ping token -> actor <!! Pong token
+  | msg -> unhandled msg
 
 let handler (actor : Actor<_>) msg = 
-  match msg with
-  | Ping -> Pong
-  | Pong -> Ping
-  |> (<!) (actor.Sender())
+  match extractRequest msg with
+  | RegisterTurtle -> 
+    let token = Guid.NewGuid()
+    actorOf2 turtleHandler
+    |> spawn actor (token |> string)
+    |> ignore
+    actor <!! TurtleRegistered token
+  | Ping token -> 
+    let handler = 
+      token
+      |> string
+      |> actor.ActorSelection
+    handler.Tell(msg, actor.Sender())
 
 let system = Configuration.parse config |> System.create "server"
 

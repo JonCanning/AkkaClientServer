@@ -11,7 +11,10 @@ let tearDown() =
   Server.dispose()
 
 [<Test>]
-let ``ping returns pong``() = Client.send Ping == Pong
-
-[<Test>]
-let ``pong returns ping``() = Client.send Pong == Ping
+let ``register turtle and ping pong``() =
+  let response = RegisterTurtle |> RequestMessage |> Client.send
+  let token = match extractResponse response with
+  | TurtleRegistered token -> token
+  | msg -> unhandled msg
+  let response = Ping token |> RequestMessage |> Client.send |> extractResponse
+  response == Pong token
