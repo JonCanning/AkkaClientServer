@@ -10,6 +10,11 @@ type Plotter = {
     bitmap      : Bitmap
     }
 
+type TurtleCmd =
+    | Turn of float
+    | Move of int32
+    | Polygon of int32*int32
+
 let naiveLine (x1,y1) plotter =
     let updatedPlotter = { plotter with position=(x1,y1) }
     let (x0,y0) = plotter.position
@@ -92,3 +97,11 @@ let generate cmdStripe times fromPlotter =
 
     cmds |> Seq.fold (fun plot cmd -> cmd plot) fromPlotter 
 
+let turtleCommandInterpreter (turtleCmd:TurtleCmd) =
+    match turtleCommand with
+    | Move (dist) ->
+        move dist
+    | Turn (angle) ->
+        turn angle
+    | Polygon (sides,length) ->
+        polygon sides length
