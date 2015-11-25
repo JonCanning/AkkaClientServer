@@ -11,10 +11,35 @@ let tearDown() =
   Server.dispose()
 
 [<Test>]
-let ``register turtle and ping pong``() =
-  let response = RegisterTurtle |> RequestMessage |> Client.send
-  let token = match extractResponse response with
-  | TurtleRegistered token -> token
-  | msg -> unhandled msg
-  let response = Ping token |> RequestMessage |> Client.send |> extractResponse
+let ``register turtle and ping pong``() = 
+  let response = 
+    Register
+    |> RequestMessage
+    |> Client.send
+  
+  let token = 
+    match extractResponse response with
+    | Registered token -> token
+    | msg -> unhandled msg
+  
+  let response = 
+    Ping token
+    |> RequestMessage
+    |> Client.send
+    |> extractResponse
+  
   response == Pong token
+
+[<Test>]
+let ``register turtle and draw line``() = 
+  let response = 
+    Register
+    |> RequestMessage
+    |> Client.send
+  
+  let token = 
+    match extractResponse response with
+    | Registered token -> token
+    | msg -> unhandled msg
+  let response = TurtleCommand(token, Move 100) |> RequestMessage |> Client.send |> extractResponse
+  response == TurtleCommandExecuted

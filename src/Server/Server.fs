@@ -3,6 +3,8 @@
 open Akka.FSharp
 open Messages
 open System
+open Plotting
+open System.Drawing
 
 let config = """
     akka {
@@ -20,20 +22,35 @@ let config = """
     """
 let (<!!) (actor : Actor<_>) msg = actor.Sender() <! ResponseMessage msg
 
-let turtleHandler (actor : Actor<_>) msg = 
-  match extractRequest msg with
-  | Ping token -> actor <!! Pong token
-  | msg -> unhandled msg
+let turtleHandler (mbx : Actor<_>) =
+  let rec loop plotter =
+    actor {
+      let! msg = mbx.Receive()
+      let plotter =
+        match extractRequest msg with
+        | TurtleCommand(token, command) ->
+          match command with
+          | Move x ->
+            let plotter = Plotting.move x plotter
+            mbx <!! TurtleCommandExecuted
+            plotter
+        | _ ->  plotter
+      return! loop plotter
+     } 
+  let plotter = {Plotter.bitmap = new Bitmap(800, 800)
+                 position = 400, 400
+                 color = Color.Black
+                 direction = 0.}
+  loop plotter
 
 let handler (actor : Actor<_>) msg = 
   match extractRequest msg with
-  | RegisterTurtle -> 
+  | Register -> 
     let token = Guid.NewGuid()
-    actorOf2 turtleHandler
-    |> spawn actor (token |> string)
-    |> ignore
-    actor <!! TurtleRegistered token
-  | Ping token -> 
+    turtleHandler |> spawn actor (token |> string) |> ignore
+    actor <!! Registered token
+  | Ping token -> actor <!! Pong token
+  | TurtleCommand(token, _) | Ping token -> 
     let handler = 
       token
       |> string
@@ -41,7 +58,6 @@ let handler (actor : Actor<_>) msg =
     handler.Tell(msg, actor.Sender())
 
 let system = Configuration.parse config |> System.create "server"
-
 let start() = 
   actorOf2 handler
   |> spawn system "server"

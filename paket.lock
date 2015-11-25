@@ -1,21 +1,20 @@
 NUGET
   remote: https://www.myget.org/F/akkadotnet/api/v2
   specs:
-    Akka (1.0.5.90-beta)
+    Akka (1.0.5.111-beta)
       Newtonsoft.Json (>= 7.0.1)
       Wire (>= 0.0.4)
-    Akka.FSharp (1.0.5.90-beta)
-      Akka (>= 1.0.5.90-beta)
-      FsPickler (>= 1.2.21)
-      FSPowerPack.Core.Community (>= 3.0.0.0)
-      FSPowerPack.Linq.Community (>= 3.0.0.0)
-    Akka.Remote (1.0.5.90-beta)
-      Akka (>= 1.0.5.90-beta)
+    Akka.FSharp (1.0.5.111-beta)
+      Akka (>= 1.0.5.111-beta)
+      FsPickler (>= 1.4.0)
+      FSPowerPack.Linq.Community (>= 3.0.0)
+    Akka.Remote (1.0.5.111-beta)
+      Akka (>= 1.0.5.111-beta)
       Google.ProtocolBuffers (>= 2.4.1.521)
       Helios (>= 1.4.1)
   remote: http://api.nuget.org/v3/index.json
   specs:
-    FsPickler (1.5.2)
+    FsPickler (1.6.0)
     FSPowerPack.Core.Community (3.0.0)
     FSPowerPack.Linq.Community (3.0.0)
       FSPowerPack.Core.Community
@@ -23,4 +22,4 @@ NUGET
     Helios (1.4.1)
     Newtonsoft.Json (7.0.1)
     NUnit (2.6.4)
-    Wire (0.0.5)
+    Wire (0.0.6)

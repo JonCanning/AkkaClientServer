@@ -10,13 +10,23 @@ type String20 =
     else ArgumentException "string is incorrect length" |> raise
 
 type Token = Guid
+type Angle = float
+type Length = int
+type Sides = int
+
+type TurtleCommand = 
+  | Turn of Angle
+  | Move of Length
+  | Polygon of Sides * Length
 
 type Request = 
-  | RegisterTurtle
+  | Register
+  | TurtleCommand of Token * TurtleCommand
   | Ping of Token
 
 type Response = 
-  | TurtleRegistered of Token
+  | Registered of Token
+  | TurtleCommandExecuted
   | Pong of Token
 
 type Message = 
