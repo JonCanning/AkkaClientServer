@@ -12,3 +12,5 @@ type Test = TestAttribute
 type SetUp = TestFixtureSetUpAttribute
 
 type TearDown = TestFixtureTearDownAttribute
+
+type Explicit = ExplicitAttribute

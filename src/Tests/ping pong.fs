@@ -47,3 +47,9 @@ let ``register turtle and draw line``() =
   response == TurtleCommandExecuted
   let response = TurtleCommand(token, Polygon(6, 100)) |> RequestMessage |> Client.send |> extractResponse
   response == TurtleCommandExecuted
+
+[<Test>]
+let ``unknown token``() =
+  let token = System.Guid.NewGuid()
+  let response = TurtleCommand(token, Move 100) |> RequestMessage |> Client.send |> extractResponse
+  response == UnknownToken token 

@@ -59,11 +59,18 @@ let handler (actor : Actor<_>) msg =
     actor <!! Registered token
   | Ping token -> actor <!! Pong token
   | TurtleCommand(token, _) | Ping token -> 
-    let handler = 
-      token
-      |> string
-      |> actor.ActorSelection
-    handler.Tell(msg, actor.Sender())
+    token
+    |> string
+    |> actor.ActorSelection
+    |> fun x -> 
+      TimeSpan.FromSeconds 1.
+      |> x.ResolveOne
+      |> Async.AwaitTask
+      |> Async.Catch
+      |> Async.RunSynchronously
+      |> function 
+      | Choice1Of2 handler -> handler.Tell(msg, actor.Sender())
+      | Choice2Of2 _ -> actor <!! UnknownToken token
 
 let system = Configuration.parse config |> System.create "server"
 
