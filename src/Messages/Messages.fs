@@ -18,6 +18,7 @@ type TurtleCommand =
   | Turn of Angle
   | Move of Length
   | Polygon of Sides * Length
+  | Color of byte * byte * byte
 
 type Request = 
   | Register

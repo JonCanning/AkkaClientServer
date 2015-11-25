@@ -43,5 +43,7 @@ let ``register turtle and draw line``() =
     | msg -> unhandled msg
   let response = TurtleCommand(token, Move 100) |> RequestMessage |> Client.send |> extractResponse
   response == TurtleCommandExecuted
+  let response = TurtleCommand(token, Color(100uy, 100uy, 100uy)) |> RequestMessage |> Client.send |> extractResponse
+  response == TurtleCommandExecuted
   let response = TurtleCommand(token, Polygon(6, 100)) |> RequestMessage |> Client.send |> extractResponse
   response == TurtleCommandExecuted

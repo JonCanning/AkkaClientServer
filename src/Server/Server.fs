@@ -21,10 +21,7 @@ let config = """
     }
     """
 let (<!!) (actor : Actor<_>) msg = actor.Sender() <! ResponseMessage msg
-
-let writeImage token plotter = 
-  sprintf "c:/tmp/%O.bmp" token |> plotter.Bitmap.Save
-  plotter
+let writeImage token plotter = sprintf "c:/tmp/%O.bmp" token |> plotter.Bitmap.Save
 
 let turtleHandler (mbx : Actor<_>) = 
   let rec loop plotter = 
@@ -32,13 +29,13 @@ let turtleHandler (mbx : Actor<_>) =
       let! msg = mbx.Receive()
       match extractRequest msg with
       | TurtleCommand(token, command) -> 
-        let plot = 
+        let plotter = 
           match command with
-          | Move x -> Plotting.move x
-          | Turn x -> Plotting.turn x
-          | Polygon(x, y) -> Plotting.polygon x y
-        
-        let plotter = plot plotter |> writeImage token
+          | Move x -> Plotting.move x plotter
+          | Turn x -> Plotting.turn x plotter
+          | Polygon(x, y) -> Plotting.polygon x y plotter
+          | Color(r, g, b) -> { plotter with Color = Color.FromArgb(r |> int, g |> int, b |> int) }
+        writeImage token plotter
         mbx <!! TurtleCommandExecuted
         return! loop plotter
       | _ -> unhandled msg
