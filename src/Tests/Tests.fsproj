@@ -52,11 +52,6 @@
       <Project>{a4edbb90-f6de-4aad-9ce3-5bcf3ec8d2eb}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Messages\Messages.fsproj">
-      <Name>Messages</Name>
-      <Project>{ca8b0181-d46d-44b2-bf52-e1a3b15867e3}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Server\Server.fsproj">
       <Name>Server</Name>
       <Project>{8ec9d2ad-0b5a-4243-b841-3af916240df0}</Project>
